@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer'
+import { BRAND_NAME } from './brand'
 
 function getTransporter() {
   const emailPort = parseInt(process.env.EMAIL_PORT || '587')
@@ -45,12 +46,12 @@ export async function sendOTPEmail(
   isExistingUser: boolean
 ): Promise<void> {
   const subject = isExistingUser
-    ? 'Your login code for Uptime Monitor'
-    : 'Verify your email for Uptime Monitor'
+    ? `Your login code for ${BRAND_NAME}`
+    : `Verify your email for ${BRAND_NAME}`
 
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <h2 style="color: #3b82f6;">Uptime Monitor</h2>
+      <h2 style="color: #3b82f6;">${BRAND_NAME}</h2>
       <p>${isExistingUser ? 'Your login code is:' : 'Your verification code is:'}</p>
       <div style="background: #f3f4f6; padding: 20px; text-align: center; margin: 20px 0; border-radius: 8px;">
         <span style="font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #1f2937;">
@@ -61,7 +62,7 @@ export async function sendOTPEmail(
       <p style="color: #6b7280;">If you didn't request this code, you can safely ignore this email.</p>
       <hr style="border: 1px solid #e5e7eb; margin: 20px 0;" />
       <p style="color: #9ca3af; font-size: 12px;">
-        Uptime Monitor - Keep your services running
+        ${BRAND_NAME} - Keep your services running
       </p>
     </div>
   `
@@ -78,7 +79,7 @@ export async function sendInvitationEmail(
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
       <h2 style="color: #3b82f6;">You've been invited!</h2>
-      <p>${inviterName} has invited you to join <strong>${organizationName}</strong> on Uptime Monitor.</p>
+      <p>${inviterName} has invited you to join <strong>${organizationName}</strong> on ${BRAND_NAME}.</p>
       <div style="text-align: center; margin: 30px 0;">
         <a href="${inviteUrl}" style="background: #3b82f6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
           Accept Invitation
@@ -98,7 +99,7 @@ export async function sendInvitationEmail(
 
   await sendEmail({
     to: email,
-    subject: `Join ${organizationName} on Uptime Monitor`,
+    subject: `Join ${organizationName} on ${BRAND_NAME}`,
     html,
     context: 'Invitation',
   })

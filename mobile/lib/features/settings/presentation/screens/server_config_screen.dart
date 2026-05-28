@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/services/server_config_service.dart';
 import '../../../../core/network/api_client.dart';
+import '../../../../core/brand.dart';
 
 class ServerConfigScreen extends StatefulWidget {
   final bool isInitialSetup;
@@ -156,7 +157,7 @@ class _ServerConfigScreenState extends State<ServerConfigScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Enter the URL of your Uptime Monitor server',
+                    'Enter the URL of your ${Brand.name} server',
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           color: Colors.grey,
                         ),

@@ -8,6 +8,7 @@ import '../../../core/network/api_client.dart';
 import '../../../core/constants/api_constants.dart';
 import '../../../core/services/logger_service.dart';
 import '../../../core/services/navigation_service.dart';
+import '../../../core/brand.dart';
 
 // Background message handler - must be top-level function
 @pragma('vm:entry-point')
@@ -118,7 +119,7 @@ class FCMService {
     // Only needed on Android - iOS handles it via setForegroundNotificationPresentationOptions
     if (Platform.isAndroid && message.notification != null) {
       await _showLocalNotification(
-        title: message.notification!.title ?? 'Uptime Monitor',
+        title: message.notification!.title ?? Brand.name,
         body: message.notification!.body ?? '',
         payload: jsonEncode(message.data),
       );

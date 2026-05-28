@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { LayoutDashboard, UserPlus, Activity, Bell, TrendingUp, ChevronRight } from "lucide-react"
+import { BRAND_NAME, BRAND_TAGLINE } from "@/lib/brand"
 
 const features = [
   {
@@ -35,10 +36,10 @@ export default function Home() {
         {/* Hero */}
         <div className="text-center mb-14 sm:mb-20">
           <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-gray-900 mb-3 sm:mb-4 tracking-tight">
-            Uptime Monitor
+            {BRAND_NAME}
           </h1>
           <p className="text-base sm:text-lg text-gray-600 mb-8 sm:mb-10 max-w-xl mx-auto">
-            Open-source uptime monitoring and status pages
+            {BRAND_TAGLINE}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
             <Link

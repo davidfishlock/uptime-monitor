@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { formatDuration } from '@/lib/utils'
+import { useBrand } from '@/components/providers'
 
 interface StatusPageData {
   title: string
@@ -30,6 +31,7 @@ interface StatusPageData {
 
 export default function PublicStatusPage() {
   const params = useParams()
+  const { name: brandName } = useBrand()
   const [statusPage, setStatusPage] = useState<StatusPageData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -152,7 +154,7 @@ export default function PublicStatusPage() {
         </div>
 
         <div className="text-center mt-8 sm:mt-12 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-          <p>Powered by Uptime Monitor</p>
+          <p>Powered by {brandName}</p>
           {statusPage.monitors[0]?.lastCheck && (
             <p className="mt-1">
               Last updated: {new Date(statusPage.monitors[0].lastCheck).toLocaleString()}

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireMobileAuth } from '@/lib/auth-helpers'
 import { sendPushNotification, getActiveDeviceTokens } from '@/lib/fcm'
+import { BRAND_NAME } from '@/lib/brand'
 
 // POST /api/test-push - Send a test push notification
 export async function POST(request: NextRequest) {
@@ -20,7 +21,7 @@ export async function POST(request: NextRequest) {
     await sendPushNotification(
       tokens,
       '🧪 Test Notification',
-      'This is a test push notification from Uptime Monitor',
+      `This is a test push notification from ${BRAND_NAME}`,
       { type: 'test', timestamp: new Date().toISOString() }
     )
 

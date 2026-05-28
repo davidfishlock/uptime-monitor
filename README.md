@@ -2,6 +2,7 @@
 
 An open-source uptime monitoring system built with Next.js, MongoDB, and TypeScript. Monitor your websites and services with real-time uptime tracking, alerts, and beautiful public status pages.
 
+[![Try Hosted - Uptime Koala](https://img.shields.io/badge/Try_Hosted-Uptime_Koala-22c55e?style=for-the-badge)](https://uptimekoala.com)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Next.js](https://img.shields.io/badge/Next.js-15.0-black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
@@ -9,6 +10,8 @@ An open-source uptime monitoring system built with Next.js, MongoDB, and TypeScr
 [![Discord](https://img.shields.io/discord/1234567890?color=7289da&label=Discord&logo=discord&logoColor=white)](https://discord.gg/frS8QgUygn)
 [![Get it on Google Play](https://img.shields.io/badge/Google_Play-414141?style=flat&logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=io.screenapp.uptime_monitor_mobile)
 [![Download on the App Store](https://img.shields.io/badge/App_Store-0D96F6?style=flat&logo=app-store&logoColor=white)](https://apps.apple.com/us/app/uptime-monitor-instant-alerts/id6757585500)
+
+> 🐨 **Don't want to self-host?** Try the managed version at **[uptimekoala.com](https://uptimekoala.com)** — same open-source codebase, hosted by the maintainers. Zero setup, free tier available.
 
 ## Components
 
@@ -56,6 +59,8 @@ The monitoring system uses a **unified API-based architecture** for maximum flex
 | **AWS Lambda** | EventBridge | Lambda function calls API every minute |
 | **Vercel** | Vercel Cron | Built-in cron calls API every minute |
 | **Manual** | System Cron | Your own cron job calls API endpoint |
+
+> ⚠️ **Enable only ONE trigger per deployment.** If multiple schedulers (e.g. Vercel Cron + a Docker sidecar) hit `/api/cron/monitor` simultaneously, the resulting parallel sweeps will exhaust outbound sockets and duplicate alerts. The endpoint holds a Mongo-backed lock as a safety net, but you should still pick one trigger.
 
 **Benefits of API-based approach:**
 - ✅ Single source of truth - all monitoring logic in Next.js app
@@ -954,6 +959,10 @@ vercel --prod                              # Deploy to production
 │    MongoDB      │  Stores monitors & check history
 └─────────────────┘
 ```
+
+## Hosted version
+
+Prefer not to manage infrastructure? The maintainers run a hosted instance of this same codebase at **[uptimekoala.com](https://uptimekoala.com)** under the brand **Uptime Koala**. Free tier available; revenue helps fund continued open-source development.
 
 ## Author
 

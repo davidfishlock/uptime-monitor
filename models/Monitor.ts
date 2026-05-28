@@ -43,6 +43,9 @@ const MonitorSchema = new Schema(
     lastCheck: {
       type: Date,
     },
+    lastAlertSentAt: {
+      type: Date,
+    },
     contactLists: {
       type: [String],
       default: [],

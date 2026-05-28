@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { sendEmail } from '@/lib/email'
+import { BRAND_NAME } from '@/lib/brand'
 
 export interface EmailNotification {
   to: string
@@ -26,7 +27,7 @@ export async function sendEmailAlert(
       <p><strong>Time:</strong> ${new Date().toLocaleString()}</p>
       <hr style="border: 1px solid #e5e7eb; margin: 20px 0;" />
       <p style="color: #6b7280; font-size: 14px;">
-        This is an automated alert from your Uptime Monitor system.
+        This is an automated alert from your ${BRAND_NAME} system.
       </p>
     </div>
   `
@@ -66,7 +67,7 @@ export async function sendRecoveryNotification(
       <p><strong>Time:</strong> ${new Date().toLocaleString()}</p>
       <hr style="border: 1px solid #e5e7eb; margin: 20px 0;" />
       <p style="color: #6b7280; font-size: 14px;">
-        This is an automated notification from your Uptime Monitor system.
+        This is an automated notification from your ${BRAND_NAME} system.
       </p>
     </div>
   `

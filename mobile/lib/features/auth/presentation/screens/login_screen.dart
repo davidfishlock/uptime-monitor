@@ -5,6 +5,7 @@ import '../providers/auth_provider.dart';
 import '../../../notifications/services/fcm_service.dart';
 import '../../../monitors/presentation/providers/monitors_provider.dart';
 import '../../../../core/services/server_config_service.dart';
+import '../../../../core/brand.dart';
 
 enum LoginStep { email, otp, register }
 
@@ -169,7 +170,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                     const SizedBox(height: 24),
                     Text(
-                      'Uptime Monitor',
+                      Brand.name,
                       style: Theme.of(context).textTheme.headlineMedium
                           ?.copyWith(fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,

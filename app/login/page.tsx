@@ -6,12 +6,14 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { useBrand } from '@/components/providers'
 
 type Step = 'email' | 'otp' | 'register'
 
 function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { name: brandName } = useBrand()
   const callbackUrl = searchParams.get('callbackUrl') || '/dashboard'
   const inviteToken = searchParams.get('invite') || undefined
 
@@ -123,7 +125,7 @@ function LoginForm() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">Uptime Monitor</CardTitle>
+          <CardTitle className="text-2xl font-bold">{brandName}</CardTitle>
           <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
             {step === 'email' && 'Enter your email to sign in'}
             {step === 'otp' && 'Enter the code sent to your email'}

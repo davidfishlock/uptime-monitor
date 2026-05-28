@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/services/server_config_service.dart';
+import '../../../../core/brand.dart';
 import '../providers/monitors_provider.dart';
 import '../widgets/monitor_card.dart';
 
@@ -17,7 +18,7 @@ class MonitorsListScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Uptime Monitor'),
+        title: const Text(Brand.name),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),

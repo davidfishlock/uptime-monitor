@@ -244,6 +244,26 @@ async function processBatch(
 
           // Send alerts if status changed from up to down
           if (previousStatus === 'up' && newStatus === 'down') {
+            // Atomic dedupe claim: only send if no alert has gone out for this
+            // monitor within ALERT_DEDUPE_MS. Atomicity here is what protects us
+            // even if the cron lock is bypassed or two pods race.
+            const dedupeBefore = new Date(Date.now() - ALERT_DEDUPE_MS)
+            const claimed = await Monitor.findOneAndUpdate(
+              {
+                _id: monitor._id,
+                $or: [
+                  { lastAlertSentAt: { $exists: false } },
+                  { lastAlertSentAt: null },
+                  { lastAlertSentAt: { $lt: dedupeBefore } },
+                ],
+              },
+              { $set: { lastAlertSentAt: new Date() } }
+            )
+            if (!claimed) {
+              console.log(`[Org:${orgId}][Batch:${batchNumber}] Alert deduped for ${monitor.name}: already sent within ${ALERT_DEDUPE_MS / 1000}s`)
+              return { success: true, monitorName: monitor.name, deduped: true }
+            }
+
             console.log(`[Org:${orgId}][Batch:${batchNumber}] Sending alerts for ${monitor.name}`)
 
             // Expand contact lists and merge with direct alerts
@@ -319,6 +339,9 @@ async function processBatch(
 
           // Send recovery alerts if status changed from down to up
           if (previousStatus === 'down' && newStatus === 'up') {
+            // Clear the dedupe stamp so the next DOWN incident alerts immediately
+            await Monitor.findByIdAndUpdate(monitor._id, { $unset: { lastAlertSentAt: 1 } })
+
             console.log(`[Org:${orgId}][Batch:${batchNumber}] Sending recovery notifications for ${monitor.name}`)
 
             // Expand contact lists for recovery emails
@@ -363,6 +386,48 @@ async function processBatch(
   return results
 }
 
+const CRON_LOCK_KEY = 'monitor-cron'
+const CRON_LOCK_TTL_MS = 2 * 60 * 1000 // 2 minutes — longer than the worst-case sweep
+const ALERT_DEDUPE_MS = 5 * 60 * 1000 // suppress repeat DOWN alerts for the same incident
+
+/**
+ * Try to acquire the cron lock. Returns true if acquired, false if another
+ * invocation is already running and the lock is still valid.
+ */
+async function acquireCronLock(): Promise<boolean> {
+  const CronLock = (await import('@/models/CronLock')).default
+  const now = new Date()
+  const expiresAt = new Date(now.getTime() + CRON_LOCK_TTL_MS)
+
+  try {
+    const res = await CronLock.updateOne(
+      {
+        _id: CRON_LOCK_KEY,
+        $or: [
+          { expiresAt: { $lt: now } },
+          { expiresAt: { $exists: false } },
+        ],
+      },
+      { $set: { acquiredAt: now, expiresAt } },
+      { upsert: true }
+    )
+    return res.upsertedCount > 0 || res.modifiedCount > 0
+  } catch (e: unknown) {
+    // 11000 = duplicate key: another instance holds an unexpired lock
+    if ((e as { code?: number })?.code === 11000) return false
+    throw e
+  }
+}
+
+async function releaseCronLock(): Promise<void> {
+  const CronLock = (await import('@/models/CronLock')).default
+  try {
+    await CronLock.deleteOne({ _id: CRON_LOCK_KEY })
+  } catch (e) {
+    console.error('Failed to release cron lock (will expire via TTL):', e)
+  }
+}
+
 /**
  * Main function to run monitor checks for all active monitors
  * This can be called from a cron job, API route, or scheduled task
@@ -374,9 +439,15 @@ export async function runMonitorChecks() {
   const { sendEmailAlert } = await import('./notifications')
   const { sendTwilioCall } = await import('./twilio')
 
-  try {
-    await connectDB()
+  await connectDB()
 
+  const acquired = await acquireCronLock()
+  if (!acquired) {
+    console.log('Monitor check skipped: another invocation is already running')
+    return { success: true, skipped: true, reason: 'lock-held' }
+  }
+
+  try {
     // Get all active monitors (not paused)
     const monitors = await Monitor.find({
       status: { $in: ['up', 'down'] },
@@ -434,5 +505,7 @@ export async function runMonitorChecks() {
   } catch (error) {
     console.error('Error running monitor checks:', error)
     throw error
+  } finally {
+    await releaseCronLock()
   }
 }

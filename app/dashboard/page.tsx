@@ -10,9 +10,11 @@ import MonitorForm from '@/components/MonitorForm'
 import MonitorCard from '@/components/MonitorCard'
 import { Plus, RefreshCw, LogOut, Users, Settings, UserPlus } from 'lucide-react'
 import Link from 'next/link'
+import { useBrand } from '@/components/providers'
 
 export default function DashboardPage() {
   const { data: session } = useSession()
+  const { name: brandName } = useBrand()
   const [monitors, setMonitors] = useState<Monitor[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
@@ -63,7 +65,7 @@ export default function DashboardPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-              Uptime Monitor
+              {brandName}
             </h1>
             <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-1">
               Monitor and track your services in real-time

@@ -5,9 +5,11 @@
 
 API_URL="${API_URL:-http://app:3200/api/cron/monitor}"
 CRON_SECRET="${CRON_SECRET}"
+POLL_INTERVAL_SECONDS="${POLL_INTERVAL_SECONDS:-60}"
 
 echo "Starting cron-based monitor service..."
 echo "API URL: $API_URL"
+echo "Poll interval: ${POLL_INTERVAL_SECONDS}s"
 
 # Function to call the monitor API
 check_monitors() {
@@ -41,8 +43,8 @@ check_monitors() {
     echo "---"
 }
 
-# Run checks every minute
+# Run checks every POLL_INTERVAL_SECONDS (default 60)
 while true; do
     check_monitors
-    sleep 60
+    sleep "$POLL_INTERVAL_SECONDS"
 done

@@ -41,5 +41,6 @@ services:
     environment:
       - API_URL=http://app:3200/api/cron/monitor
       - CRON_SECRET=${CRON_SECRET}
+      - POLL_INTERVAL_SECONDS=${POLL_INTERVAL_SECONDS:-60}
     mem_limit: 32m
     entrypoint: ["/bin/sh", "/app/cron-monitor.sh"]

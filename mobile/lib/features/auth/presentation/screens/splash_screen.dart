@@ -5,6 +5,7 @@ import '../providers/auth_provider.dart';
 import '../../../notifications/services/fcm_service.dart';
 import '../../../../core/services/server_config_service.dart';
 import '../../../../core/network/api_client.dart';
+import '../../../../core/brand.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -74,7 +75,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             ),
             const SizedBox(height: 24),
             Text(
-              'Uptime Monitor',
+              Brand.name,
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),

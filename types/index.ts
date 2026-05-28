@@ -75,6 +75,7 @@ export interface Monitor {
   timeout: number // in seconds
   status: 'up' | 'down' | 'paused'
   lastCheck?: Date
+  lastAlertSentAt?: Date
   organizationId: string
   createdAt: Date
   updatedAt: Date
