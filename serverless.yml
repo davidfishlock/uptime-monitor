@@ -6,7 +6,7 @@ useDotenv: true
 
 provider:
   name: aws
-  runtime: nodejs20.x
+  runtime: nodejs22.x
   region: us-east-1
   stage: ${opt:stage, 'production'}
   timeout: 300 # 5 minutes timeout (reasonable for monitor checks)
@@ -51,7 +51,7 @@ custom:
     bundle: true
     minify: true
     sourcemap: false
-    target: node20
+    target: node22
     platform: node
     concurrency: 10
     packager: npm

@@ -22,7 +22,7 @@ services:
       MP_SMTP_AUTH_ALLOW_INSECURE: 1
 
   app:
-    image: node:20-alpine
+    image: node:22-alpine
     container_name: uptime-monitor-app-dev
     restart: unless-stopped
     working_dir: /app
