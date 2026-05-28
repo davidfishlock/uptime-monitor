@@ -4,11 +4,19 @@ import "./globals.css"
 import Providers from "@/components/providers"
 import { BRAND_NAME, BRAND_TAGLINE } from "@/lib/brand"
 
+// Force dynamic rendering so process.env (BRAND_NAME, BRAND_TAGLINE) is read
+// per-request at runtime. Without this, Next.js statically pre-renders the
+// layout at build time, baking whatever was in the env during CI build —
+// which means the K8s ConfigMap override would be silently ignored.
+export const dynamic = 'force-dynamic'
+
 const inter = Inter({ subsets: ["latin"] })
 
-export const metadata: Metadata = {
-  title: BRAND_NAME,
-  description: BRAND_TAGLINE,
+export function generateMetadata(): Metadata {
+  return {
+    title: BRAND_NAME,
+    description: BRAND_TAGLINE,
+  }
 }
 
 export const viewport: Viewport = {
